@@ -34,5 +34,11 @@ const routers = [{
         title:'前台统计'
     },
     component:(resolve)  => require(['./views/register/analysis.vue'],resolve)
+},{
+    path:'/register/editUser',
+    mata:{
+        title:'修改数据'
+    },
+    component:(resolve) => require(['./views/register/editUser.vue'],resolve)
 }];
 export default routers;

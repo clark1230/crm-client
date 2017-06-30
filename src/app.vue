@@ -47,11 +47,15 @@
     padding: 10px 0 20px;
     color: #9ea7b4;
 }
-.link{
-    color:lightgray;
+
+.link {
+    color: lightgray;
+    width: 100%;
+    height: 40px;
 }
-.left-content{
-    height:600px;
+
+.left-content {
+    height: 600px;
 }
 </style>
 <template>
@@ -64,10 +68,10 @@
                     <Col span="6">
                     <Menu-item name="1">
                         <Icon type="home"></Icon>
-                        主页
+                        咨询
                     </Menu-item>
                     </Col>
-                   <Col span="6">
+                    <Col span="6">
                     <Menu-item name="2">
                         <Icon type="medkit"></Icon>
                         管理
@@ -76,7 +80,7 @@
                     <Col span="6">
                     <Menu-item name="3">
                         <Icon type="gear-a"></Icon>
-                         设置
+                        设置
                     </Menu-item>
                     </Col>
                     <Col span="6">
@@ -91,18 +95,17 @@
     
         <div class="layout-content">
             <Row>
-                <i-col span="3">
+                <i-col span="4">
                     <Menu theme="dark" class="left-content" active-name="1-2" width="auto" :open-names="['1']">
                         <Submenu name="0">
                             <template slot="title">
                                 <Icon type="person-stalker"></Icon>
                                 前台录入
                             </template>
-                            <Menu-item name="0-1" >
-                               
-                               <router-link to="/register" class="link">信息录入</router-link>
+                            <Menu-item name="0-1">
+                                <router-link to="/register" class="link">信息录入</router-link>
                             </Menu-item>
-                            <Menu-item name="0-2" >
+                            <Menu-item name="0-2">
                                 <router-link to="/register/analyis" class="link">数据统计</router-link>
                             </Menu-item>
                         </Submenu>
@@ -111,12 +114,12 @@
                                 <Icon type="person"></Icon>
                                 权限管理
                             </template>
-                            
+    
                             <Menu-item name="1-2" class="link">
-                                <router-link to="/user"  class="link">用户管理</router-link>
+                                <router-link to="/user" class="link">用户管理</router-link>
                             </Menu-item>
                             <Menu-item name="1-3">
-                                <router-link to="/role"  class="link">角色管理</router-link>
+                                <router-link to="/role" class="link">角色管理</router-link>
                             </Menu-item>
                             <Menu-item name="1-4">
                                 权限管理
@@ -125,15 +128,26 @@
                         <Submenu name="2">
                             <template slot="title">
                                 <Icon type="ios-keypad"></Icon>
-                                导航二
+                                学员管理
                             </template>
-                            <Menu-item name="2-1">选项 1</Menu-item>
-                            <Menu-item name="2-2">选项 2</Menu-item>
+                            <Menu-item name="2-1">学员信息</Menu-item>
+                            <Menu-item name="2-2">回收站</Menu-item>
+                            <Menu-item name="2-2">进班学员</Menu-item>
+                            <Menu-item name="2-2">公共库</Menu-item>
                         </Submenu>
-    
+                        <Submenu name="2">
+                            <template slot="title">
+                                <Icon type="ios-keypad"></Icon>
+                                系统设置
+                            </template>
+                            <Menu-item name="2-1">学员信息</Menu-item>
+                            <Menu-item name="2-2">回收站</Menu-item>
+                            <Menu-item name="2-2">进班学员</Menu-item>
+                            <Menu-item name="2-2">公共库</Menu-item>
+                        </Submenu>
                     </Menu>
                 </i-col>
-                <i-col span="21">
+                <i-col span="20">
                     <div class="layout-content-main">
                         <router-view></router-view>
                     </div>
@@ -147,6 +161,6 @@
 </template>
 <script>
 export default {
-  
+
 }
 </script>
