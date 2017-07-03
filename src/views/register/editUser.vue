@@ -24,7 +24,7 @@
         <Form-item>
             <Button type="primary"  icon="edit" @click="handleSubmit('formCustom')">保存</Button>
             <Button type="ghost" icon="ios-refresh-empty" @click="handleReset('formCustom')" style="margin-left: 8px">重置</Button>
-            <router-link  to="/register"><Button  icon="ios-undo">返回</Button></router-link>
+            <router-link  to="/zixun/register"><Button  icon="ios-undo">返回</Button></router-link>
         </Form-item>
     </Form>
        <router-view></router-view>
@@ -134,7 +134,7 @@
                                  _this.success(resp.msg);
                                 //跳转页面
                                setTimeout(function(){
-                                    _this.$router.push('/register');
+                                    _this.$router.push('/zixun/register');
                                },1000);
                             } else {
                                 _this.error(resp.msg);

@@ -21,28 +21,24 @@
         </Form-item>
         <Form-item label="所属公司" prop="companyId">
             <Select v-model="employeeForm.companyId" placeholder="请选择所属公司!">
-                <Option value="1">北京市</Option>
-                <Option value="2">上海市</Option>
-                <Option value="3">深圳市</Option>
+                 <Option v-for="tbDict in tbDicts" :value="tbDict.id">{{tbDict.name}}</Option>
             </Select>
         </Form-item>
         <Form-item label="所属部门" prop="deptId">
             <Select v-model="employeeForm.deptId" placeholder="请选择所属部门!">
-                <Option value="1">北京市</Option>
-                <Option value="2">上海市</Option>
-                <Option value="3">深圳市</Option>
+                <Option v-for="tbDict in tbDicts2" :value="tbDict.id">{{tbDict.name}}</Option>
             </Select>
         </Form-item>
          <Form-item label="咨询师" prop="isConsultant">
            <Radio-group v-model="employeeForm.isConsultant">
                 <Radio label="1">是</Radio>
-                <Radio label="2">否</Radio>
+                <Radio label="0">否</Radio>
             </Radio-group>
         </Form-item>
         <Form-item>
             <Button size='small' type="primary" @click="handleSubmit('employeeForm')">保存</Button>
             <Button size='small' type="warning" @click="handleReset('employeeForm')" style="margin-left: 8px">重置</Button>
-            <router-link to="/user">
+            <router-link to="/manager/user">
                 <Button size='small' type="ghost" style="margin-left: 8px">返回</Button>
             </router-link>
         </Form-item>
@@ -54,7 +50,7 @@ export default {
         const validateName = (rule, value, callback) => {
             if (value === '') {
                 callback(new Error('请输入用户!'));
-            } else {
+            } else{
                 callback();
             }
         };
@@ -146,8 +142,24 @@ export default {
                 isConsultant:[
                     {validator:validateIsConsultant,required:true,trigger:'change'}
                 ]
-            }
+            },
+            tbDicts:[],//公司数据
+            tbDicts2:[]//部门数据
         }
+    },
+    mounted:function(){
+        //组件加载时到服务器获取公司和部门信息
+        let _this = this;
+        _this.$.get('http://localhost:8090/employee/getCompany').then(function(resp){
+            console.log(resp);
+            _this.tbDicts= resp;
+        });
+        _this.$.get('http://localhost:8090/employee/getDept').then(function(resp){
+            console.log(resp);
+            _this.tbDicts2= resp;
+        }).catch(function(){
+             _this.$Message.error('网络错误!');
+        });
     },
     methods:{
         handleSubmit(name){
@@ -163,7 +175,7 @@ export default {
                             _this.handleReset(name);
                             //1秒后跳转到主页
                             setTimeout(function(){
-                                _this.$router.push('/user');
+                                _this.$router.push('/manager/user');
                             },1000);
                         }else{
                             _this.error(resp.msg);

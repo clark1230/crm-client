@@ -9,7 +9,6 @@
 <script>
 export default {
   data() {
-
     return {
       message: '哈哈',
       testColumn:[
@@ -25,8 +24,6 @@ export default {
       this.testData = data1;
     }
   }
- 
-
 }
 </script>
 

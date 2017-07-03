@@ -87,7 +87,7 @@
               <Icon type="ios-people"></Icon>&nbsp;&nbsp;{{customer.userIdMsg}}
           
             </span>
-            <router-link :to="{path:'/register/editUser',query: {customerName:customer.realName}}" >
+            <router-link :to="{path:'/zixun/register/editUser',query: {customerName:customer.realName}}" >
               <!--特别注意的地方，鼠标点击时回去数组的所有号，方便获取数据-->
               <Button @click="edit(item)" value=""  class="wait-list-btn" type="primary" size="small" icon="edit">修改</Button>
             </router-link>

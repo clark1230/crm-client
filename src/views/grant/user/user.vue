@@ -9,7 +9,7 @@
     <div id="user">
         <div class='toolbar'>
             <!--跳转到添加页面-->
-            <router-link to="/user/addUser" icon="plus">
+            <router-link to="/manager/user/addUser" icon="plus">
                 <Button size="small"  icon="plus">添加</Button>
             </router-link>
             <Button size="small" type="warning" icon="close-circled">批量删除</Button>
@@ -21,7 +21,7 @@
         </div>
         <!--路由视图-->
         <router-view></router-view>
-        <Table    size='small' :highlight-row='true' :border='true' :columns="employeeColumn" :data="employeeData">
+        <Table  size='small' :highlight-row='true' :border='true' :columns="employeeColumn" :data="employeeData">
          
         </Table>
        <div style="margin: 10px;">
@@ -192,7 +192,7 @@ export default {
                                 },
                                 on: {
                                     click: () => {
-                                        this.show(params.index)
+                                        this.show(params.index)//展示数据
                                     }
                                 }
                             }),
@@ -208,7 +208,7 @@ export default {
                                 },
                                 on: {
                                     click: () => {
-                                        this.editEmployee(params.index);
+                                        this.editUser(params.index);//修改数据
                                     }
                                 }
                             }),
@@ -299,8 +299,11 @@ export default {
           
            // _this.employeeData.splice(index, 1);
         },
-        editEmployee(index){
-            this.$Modal.info({title:'修改',content:'哈哈'});
+        editUser(index){//修改用户数据
+           let userId = this.employeeData[index].userId;
+           console.log(userId);
+           //跳转到修改页
+           this.$router.push('/manager/user/editUser');
         },
         //切换页面
         changePage(page){
