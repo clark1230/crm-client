@@ -11,6 +11,7 @@ import jquery from 'jquery';
 
 Vue.use(VueRouter);
 Vue.use(VueResource);
+
 Vue.prototype.$axios = axios;
 Vue.prototype.$ = jquery;
 Vue.use(iView);

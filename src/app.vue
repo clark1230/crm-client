@@ -2,21 +2,23 @@
 .layout {
     border: 1px solid #d7dde4;
     background: #f5f7f9;
+    min-width:1200px;
 }
 
 .layout-logo {
-    width: 600px;
+    width: 40%;
     height: 50px;
     background-image: url('./static/logo.png');
+    background-repeat:no-repeat;
     border-radius: 3px;
     float: left;
     position: relative;
     top: 0px;
-    left: -35px;
+    left: -70px;
 }
 
 .layout-nav {
-    width: 420px;
+    width: 60%;
     margin: 0 auto;
 }
 
@@ -27,19 +29,19 @@
 }
 
 .layout-breadcrumb {
-    padding: 10px 15px 0;
+    /*padding: 5px 10px 0;*/
 }
 
 .layout-content {
-    min-height: 200px;
-    margin: 15px;
+    min-height: 700px;
+    margin: 0px;
     overflow: hidden;
     background: #fff;
-    border-radius: 4px;
+    /*border-radius: 4px;*/
 }
 
 .layout-content-main {
-    padding: 10px;
+    /* padding: 5px;*/
 }
 
 .layout-copy {
@@ -60,6 +62,21 @@
 .left-content {
     height: 600px;
 }
+.menu{
+    position:absolute;
+    right:10px;
+    color:#808484;
+    font-size:35px;
+    text-align:center;
+}
+.menu-a{
+    width:70px;
+    height:50px;
+    display:inline-block;
+}
+.menu:hover{
+    background-color:#293655;
+}
 </style>
 <template>
     <div class="layout">
@@ -68,27 +85,55 @@
             <div class="layout-logo">
             </div>
             <div class="layout-nav">
-                <Row type="flex" justify="end" class="code-row-bg">
-                    <Col :lg="24">
+                <Row type="flex" j class="code-row-bg">
+                    <Col >
                             <Menu-item name="1"  class='item'   @on-select='zixun' >
-                                <Icon type="home"></Icon>
-                                    咨询
+                                <Icon type="home"></Icon>咨询
                             </Menu-item>
                         &nbsp;&nbsp;
                         <Menu-item name="2" class='item'>
-                            <Icon type="medkit"></Icon>
-                            管理
+                            <Icon type="medkit"></Icon>管理
                         </Menu-item>
                          &nbsp;&nbsp;
                         <Menu-item name="3" class='item'>
-                            <Icon type="gear-a"></Icon>
-                                设置
+                            <Icon type="gear-a"></Icon>设置
                         </Menu-item>
+                        
                     </Col>
+                     <div  class="menu">
+                            <Dropdown>
+                            <a href="javascript:void(0)"  style="color:#808484" class="menu-a">
+                                
+                                <Icon type="person"></Icon>
+                            </a>
+                            
+                            <Dropdown-menu slot="list">
+                                <Dropdown-item>
+                                    <a href="#">修改密码</a>
+                                </Dropdown-item>
+                                <Dropdown-item divided>
+                                    <a href="#" @click="loginModel=true">注销系统</a>
+                                </Dropdown-item>
+                                <Dropdown-item >北京烤鸭</Dropdown-item>
+                                </Dropdown-menu>
+                            </Dropdown>
+                            <Modal
+                                v-model="loginModel"
+                                title="注意"
+                                @on-ok="ok"
+                                @on-cancel="cancel">
+                                <h3>是否退出本系统!</h3>
+                            </Modal>
+                        </div>
                 </Row>
+                
             </div>
+
         </Menu>
-        <router-view></router-view>
+         <div class="layout-content">
+            <router-view></router-view>
+        </div>
+        
         <div class="layout-copy">
             2017&copy;合众艾特信息技术有限公司
         </div>
@@ -98,7 +143,7 @@
 export default {
     data(){
         return {
-
+            loginModel:false
         }
     },
     methods:{
@@ -114,6 +159,15 @@ export default {
                 this.$router.push('/settings');
             }
           //alert('菜单名称'+name);
+        },
+        logout:function(){
+            alert("是否退出系统");
+        },
+        ok:function(){
+            alert('退出本系统了');
+        },
+        cancel:function(){
+
         }
     }
 }

@@ -50,10 +50,8 @@
 }
 </style>
 <template>
-   <div  class='layout'>
-    <div class="layout-content">
             <Row>
-                <i-col span="4">
+                <i-col span="3">
                     <Menu theme="dark" class="left-content" active-name="0" width="auto" :open-names="['1']"  @on-select='menu' >
                         <Submenu name="1">
                             <template slot="title">
@@ -82,21 +80,20 @@
                     </Menu>
                    
                 </i-col>
-                <i-col span="20">
+                <i-col span="21">
                     <div class="layout-content-main">
                         <router-view></router-view>
                     </div>
                 </i-col>
             </Row>
-        </div>
-       
-        
-   </div>
 </template>
 <script>
     export default{
         data(){
             return {}
+        },
+        mounted:function(){
+            this.$router.push('/zixun/customer');
         },
         methods:{
             menu(name){//点击菜单跳转到别的组件
@@ -104,6 +101,8 @@
                     this.$router.push('/zixun/register');
                 }else if(name === '1-2'){
                     this.$router.push('/zixun/register/analyis'); 
+                }else if(name==='2-1'){
+                    this.$router.push('/zixun/customer');
                 }
             }
         }

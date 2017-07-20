@@ -10,12 +10,12 @@
         <div class='toolbar'>
             <!--跳转到添加页面-->
             <router-link to="/manager/user/addUser" icon="plus">
-                <Button size="small"  icon="plus">添加</Button>
+                <Button size="small" type='primary'  icon="plus" >添加</Button>
             </router-link>
-            <Button size="small" type="warning" icon="close-circled">批量删除</Button>
-            <Input size="small"  placeholder="请输入搜索内容!" style="width:200px;"></Input>
+            <Button size="small" type="success" icon="close-circled">批量删除</Button>
+            <Input size="small"  placeholder="请输入姓名搜索!" style="width:200px;"></Input>
             <Button size="small" type="primary" @click="handleSubmit('formInline')" icon="search">搜索</Button>
-            <Button size="small" icon="loop" @click="refresh">刷新</Button>
+            <Button size="small" type="warning" icon="loop" @click="refresh">刷新</Button>
             <!--模态框-->
            
         </div>
@@ -194,6 +194,31 @@ export default {
                                     click: () => {
                                         this.show(params.index)//展示数据
                                     }
+                                },
+                                nativeOn:{
+                                    mouseenter:()=>{
+                                        this.$Message.info('显示数据!');
+                                    }
+                                }
+                            }),h('Button', {//角色授权
+                                props: {
+                                    type: 'success',
+                                    size:'small',
+                                    icon:'android-settings',
+                                    shape:"circle"
+                                },
+                                style: {
+                                    marginRight: '5px'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.grant(params.index)//授权
+                                    }
+                                },
+                                nativeOn:{
+                                    mouseenter:()=>{
+                                        this.$Message.info('授予角色!');
+                                    }
                                 }
                             }),
                             h('Button', {
@@ -210,6 +235,11 @@ export default {
                                     click: () => {
                                         this.editUser(params.index);//修改数据
                                     }
+                                },
+                                nativeOn:{
+                                    mouseenter:()=>{
+                                        this.$Message.info('修改用户!');
+                                    }
                                 }
                             }),
                             h('Button', {
@@ -222,6 +252,11 @@ export default {
                                 on: {
                                     click: () => {
                                         this.remove(params.index)
+                                    }
+                                },
+                                nativeOn:{
+                                    mouseenter:()=>{
+                                        this.$Message.info('删除用户!');
                                     }
                                 }
                             })
@@ -237,7 +272,7 @@ export default {
     },
     mounted:function(){
         this.$Message.config({
-         top: 85
+            top: 85
         }); 
         this.getAjaxData(0,this.pageSize);
     },
@@ -301,9 +336,12 @@ export default {
         },
         editUser(index){//修改用户数据
            let userId = this.employeeData[index].userId;
-           console.log(userId);
            //跳转到修改页
-           this.$router.push('/manager/user/editUser');
+           //{path:'/zixun/register/editUser',query: {customerName:customer.realName}}
+           this.$router.push({path:'/manager/user/editUser',query:{userId:userId}});
+        },
+        grant(index){//用户授予角色
+            alert('角色授权');
         },
         //切换页面
         changePage(page){
