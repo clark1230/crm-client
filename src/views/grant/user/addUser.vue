@@ -45,6 +45,7 @@
     </Form>
 </template>
 <script>
+import global from '../../GLOBAL.vue';
 export default {
     data() {
         const validateName = (rule, value, callback) => {
@@ -150,11 +151,11 @@ export default {
     mounted:function(){
         //组件加载时到服务器获取公司和部门信息
         let _this = this;
-        _this.$.get('http://localhost:8090/employee/getCompany').then(function(resp){
+        _this.$.get(global.serverUrl()+'/employee/getCompany').then(function(resp){
             console.log(resp);
             _this.tbDicts= resp;
         });
-        _this.$.get('http://localhost:8090/employee/getDept').then(function(resp){
+        _this.$.get(global.serverUrl()+'/employee/getDept').then(function(resp){
             console.log(resp);
             _this.tbDicts2= resp;
         }).catch(function(){
@@ -168,7 +169,7 @@ export default {
                 if (valid) {
                     this.$Message.success('表单验证成功!');
                     //异步提交数据
-                    this.$.post('http://localhost:8090/employee/addEmployee',this.employeeForm).then(function(resp){
+                    this.$.post(global.serverUrl()+'/employee/addEmployee',this.employeeForm).then(function(resp){
                         console.log(resp.data);
                         if(resp.code ===600){//服务器成功处理请求
                             _this.success(resp.msg);

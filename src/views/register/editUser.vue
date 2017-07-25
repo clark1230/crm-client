@@ -31,6 +31,7 @@
    </div>
 </template>
 <script>
+import global from  '../GLOBAL.vue';
     export default {
         data () {
             //校验用户名
@@ -97,14 +98,14 @@
             let _this = this;
             let customerName = this.$route.query.customerName;
             //获取咨询师信息
-            this.$axios.get('http://localhost:8090/foreground/consultantData?companyId=36').
+            this.$axios.get(global.serverUrl()+'/foreground/consultantData?companyId=36').
             then(function (response) {
                 _this.users = response.data;
                 showCustomer();
             });
             function showCustomer(){
                 //获取面试者姓名，到服务器中获取数据
-                _this.$.get('http://localhost:8090/forground/editCustomer?realName='+customerName)
+                _this.$.get(global.serverUrl()+'/forground/editCustomer?realName='+customerName)
                 .then(function(resp){
                     //数据回显
                     _this.formCustom.realName = resp.realName;
@@ -128,7 +129,7 @@
                         this.$Message.success('表单验证成功!');
                         //保存修改的信息
                         //提交表单数据
-                        _this.$.post('http://localhost:8090/forground/editCustomer',this.formCustom).then(function (resp) {
+                        _this.$.post(global.serverUrl()+'/forground/editCustomer',this.formCustom).then(function (resp) {
                             // _this.$route.push({path:'/register'});
                             if(resp.code === 600) {
                                  _this.success(resp.msg);

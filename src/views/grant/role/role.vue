@@ -25,6 +25,7 @@
     </div>
 </template>
 <script>
+    import global  from '../../GLOBAL.vue';
 export default {
     data() {
         return {
@@ -251,7 +252,7 @@ export default {
                     top:300,
                     duration: 30
                 });
-            this.$axios.get('http://localhost:8090/role/getRoleList?limit='+limit+'&size='+size+"&roleName="+roleName).then(function(resp){  
+            this.$axios.get(global.serverUrl()+'/role/getRoleList?limit='+limit+'&size='+size+"&roleName="+roleName).then(function(resp){  
                 _this.roleData = resp.data.rows;
                 _this.roleTotal = resp.data.total;
                 _this.$Message.destroy();
@@ -310,7 +311,7 @@ export default {
                 onOk: () => {
                     let roleId = _this.roleData[index].id;
                     //异步删除数据
-                    _this.$axios.get('http://localhost:8090/role/removeRole?roleId='+roleId).then(function(resp){
+                    _this.$axios.get(global.serverUrl()+'/role/removeRole?roleId='+roleId).then(function(resp){
                         console.log(resp);
                         if(resp.data.code === 600){//删除成功
                             _this.$Modal.remove();//移除模态框

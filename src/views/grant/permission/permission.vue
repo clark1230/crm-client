@@ -30,6 +30,7 @@
     </div>
 </template>
 <script>
+    import global from "../../GLOBAL.vue";
     export default {
         data () {
             return {
@@ -54,11 +55,11 @@
         },
         mounted:function(){
             var _this = this;
-            _this.$.get('http://localhost:8090/permission/getMenuApp').then(function(resp){
+            _this.$.get(global.serverUrl()+'/permission/getMenuApp').then(function(resp){
                 console.log(resp);
                 _this.menuAppData =resp;
             });
-            _this.$.get('http://localhost:8090/permission/getSubPermission').then(function(resp){
+            _this.$.get(global.serverUrl()+'/permission/getSubPermission').then(function(resp){
                 _this.subMenuApps = resp;
             });
         }

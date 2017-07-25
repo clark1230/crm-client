@@ -46,6 +46,7 @@
     </Form>
 </template>
 <script>
+    import global from  '../../GLOBAL.vue';
     export default{
         data(){
             const validateName = (rule, value, callback) => {
@@ -117,9 +118,9 @@
                     tel:'',
                     email: '',
                     wechatNo: '',
-                    companyId: '',
-                    deptId: '',
-                    isConsultant: '',
+                    companyId: 0,
+                    deptId: 0,
+                    isConsultant: 0,
                 },
                 //表单校验规则
                 employeeRule:{
@@ -153,13 +154,13 @@
             // http://localhost:8090/employee/editEmployee
             var  userId =this.$route.query.userId;
             var _this = this;
-            _this.$.get('http://localhost:8090/employee/editEmployee?userId='+userId).then(function(resp){
+            _this.$.get(global.serverUrl()+'/employee/editEmployee?userId='+userId).then(function(resp){
                 _this.employeeForm = resp;//数据回显
             });
-            _this.$.get('http://localhost:8090/employee/getCompany').then(function(resp){
+            _this.$.get(global.serverUrl()+'/employee/getCompany').then(function(resp){
                 _this.tbDicts= resp;
             });
-            _this.$.get('http://localhost:8090/employee/getDept').then(function(resp){
+            _this.$.get(global.serverUrl()+'/employee/getDept').then(function(resp){
                 _this.tbDicts2= resp;
             }).catch(function(){
                 _this.$Message.error('网络错误!');
@@ -192,7 +193,7 @@
                     formData.companyId= _this.employeeForm.companyId;
                     formData.deptId = _this.employeeForm.deptId;
                     formData.isConsultant = _this.employeeForm.isConsultant;
-                    _this.$.post('http://localhost:8090/employee/editEmployee', formData).then(function(resp){
+                    _this.$.post(global.serverUrl()+'/employee/editEmployee', formData).then(function(resp){
                         if(resp.code === 600){
                             _this.success(resp.msg);
                             _this.$router.push('/manager/user');

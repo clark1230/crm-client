@@ -7,15 +7,15 @@ import Util from './libs/util';
 import App from './app.vue';
 import 'iview/dist/styles/iview.css';
 import axios from 'axios';
-import jquery from 'jquery';
+import jquery from 'jquery'; //使用jquery库
+
 
 Vue.use(VueRouter);
 Vue.use(VueResource);
 
+Vue.use(iView);
 Vue.prototype.$axios = axios;
 Vue.prototype.$ = jquery;
-Vue.use(iView);
-
 
 // 路由配置
 const RouterConfig = {

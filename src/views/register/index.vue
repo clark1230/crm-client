@@ -101,7 +101,7 @@
   </div>
 </template>
 <script>
-
+import global from '../GLOBAL.vue';
 export default {
   data() {
     const validateRealName = (rule, value, callback) => {
@@ -175,7 +175,7 @@ export default {
           this.$Message.success('提交成功!');
           let _this = this;
           //提交表单数据
-          this.$.post('http://localhost:8090/foreground/saveUser', this.formCustom).then(function (resp) {
+          this.$.post(global.serverUrl()+'/foreground/saveUser', this.formCustom).then(function (resp) {
             if (resp.code === 600) {
               _this.success(resp.msg);
               //处理成功后清空表单内容
@@ -263,7 +263,7 @@ export default {
     getAjaxData() {
       let _this = this;
       //获取当前学员信息
-      _this.$axios.get('http://localhost:8090/forground/getCurrentData?companyId=36').
+      _this.$axios.get(global.serverUrl()+'/forground/getCurrentData?companyId=36').
         then(function (resp) {
           var userData = [];
           for (var i = 0; i < resp.data.length; i++) {
@@ -290,7 +290,7 @@ export default {
   mounted: function () {//挂载时，到服务器获取数据
     let _this = this;
     //获取咨询师信息
-    this.$axios.get('http://localhost:8090/foreground/consultantData?companyId=36').
+    this.$axios.get(global.serverUrl()+'/foreground/consultantData?companyId=36').
       then(function (response) {
         _this.users = response.data;
       });

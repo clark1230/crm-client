@@ -67,6 +67,15 @@
                         </Menu-item>
                       
                     </Submenu>
+                    <Submenu name="2">
+                        <template slot="title">
+                            <Icon type="navicon"></Icon>
+                            其他
+                        </template>
+                        <Menu-item name="2-1">
+                           数据字典
+                        </Menu-item>
+                    </Submenu>
                 </Menu>
             </i-col>
             <i-col span="21">

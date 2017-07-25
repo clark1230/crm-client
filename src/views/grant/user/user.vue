@@ -33,7 +33,7 @@
     </div>
 </template>
 <script>
-
+import global from '../../GLOBAL.vue';
 export default {
     data() {
         return {
@@ -285,7 +285,7 @@ export default {
                     top:300,
                     duration: 30
                 });
-            _this.$axios.get('http://localhost:8090/employee/getEmployeeList?limit='+limit+"&size="+size).then(function(resp){
+            _this.$axios.get(global.serverUrl()+'/employee/getEmployeeList?limit='+limit+"&size="+size).then(function(resp){
                 _this.$Message.destroy();
                 _this.employeeData = resp.data.records;
                 _this.userTotal = resp.data.total;
@@ -317,7 +317,7 @@ export default {
                     let userId = _this.employeeData[index].userId;
                     console.log(userId);
                     //异步删除数据
-                    _this.$axios.get('http://localhost:8090/employee/removeEmployee?userId='+userId).then(function(resp){
+                    _this.$axios.get(global.serverUrl()+'/employee/removeEmployee?userId='+userId).then(function(resp){
                         if(resp.data.code === 600){//删除成功
                             _this.$Modal.remove();//移除模态框
                             _this.success(resp.data.msg);

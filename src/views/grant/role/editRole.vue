@@ -1,20 +1,21 @@
 <template>
     <div id='addRole'>
+        <input type="hidden" v-model="addRoleForm.id"></input>
         <Form ref="addRoleForm" :model="addRoleForm" :rules="ruleCustom" :label-width="80">
         <Form-item label="角色" prop="role">
-            <Input type="hidden" v-model="addRoleForm.id"></Input>
             <Input type="text" v-model="addRoleForm.role" placeholder='请输入觉名称!'></Input>
         </Form-item>
         <Form-item label="启用" prop="available">
             <Radio-group v-model="addRoleForm.available">
-                <Radio label="0" >不启用</Radio>
+                <Radio
+                 label="0" >不启用</Radio>
                 <Radio label="1">启用</Radio>
             </Radio-group>
         </Form-item>
         <Form-item label="描述" prop="description">
             <Input v-model="addRoleForm.description"   type="textarea" :autosize="{minRows: 5,maxRows: 6}" placeholder="请输入角色描述!"></Input>
         </Form-item>
-        <Form-item>
+        <Form-item >
             <Button size='small' type="primary" @click="handleSubmit('addRoleForm')">保存</Button>
             <Button size='small' type="ghost" @click="handleReset('addRoleForm')" style="margin-left: 8px">重置</Button>
             <router-link to="/manager/role">
@@ -25,6 +26,7 @@
     </div>
 </template>
 <script>
+    import global from '../../GLOBAL.vue';
     export default {
         data () {
             const validateRole = (rule, value, callback) => {
@@ -62,7 +64,7 @@
             var  roleId =this.$route.query.roleId;
             //数据回显
             var _this = this;
-            _this.$.get('http://localhost:8090/role/editRole?roleId='+roleId).then(function(resp){
+            _this.$.get(global.serverUrl()+'/role/editRole?roleId='+roleId).then(function(resp){
                 _this.addRoleForm = resp;
             });
         },
@@ -75,7 +77,7 @@
                        console.log(_this.addRoleForm);
                        //提交表单
                        //异步提交数据
-                        _this.$.post('http://localhost:8090/role/editRole',this.addRoleForm).then(function(resp){
+                        _this.$.post(global.serverUrl()+'/role/editRole',this.addRoleForm).then(function(resp){
                             if(resp.code ===600){//服务器成功处理请求
                                 _this.success(resp.msg);
                                 _this.handleReset(name);

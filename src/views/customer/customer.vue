@@ -30,6 +30,7 @@
 </template>
 
 <script>
+    import global from '../GLOBAL.vue';
     export default{
         data(){
             return {
@@ -46,6 +47,7 @@
                     {
                     title: '操作',
                     key: 'action',
+                    width:160,
                     align: 'center',
                     render: (h, params) => {
                         return h('div', [
@@ -162,7 +164,7 @@
                     top:300,
                     duration: 30
                 });
-            _this.$axios.get('http://localhost:8090/customer/getData?offset='+offset+"&limit="+limit).then(function(resp){
+            _this.$axios.get(global.serverUrl()+'/customer/getData?offset='+offset+"&limit="+limit).then(function(resp){
                 _this.$Message.destroy();
                 console.log(resp);
                 _this.customerData = resp.data.rows;
@@ -213,7 +215,7 @@
                         var customerId = _this.customerData[index].customerId;
                         console.log(customerId);
                         //异步删除数据
-                        _this.$axios.get('http://localhost:8090/customer/hideData?customerId='+customerId).then(function(resp){
+                        _this.$axios.get(global.serverUrl()+'/customer/hideData?customerId='+customerId).then(function(resp){
                             if(resp.data.code === 600){//删除成功
                                 _this.$Modal.remove();//移除模态框
                                 _this.success(resp.data.msg);

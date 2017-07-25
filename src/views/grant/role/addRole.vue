@@ -24,6 +24,7 @@
     </div>
 </template>
 <script>
+    import global from "../../GLOBAL.vue";
     export default {
         data () {
             const validateRole = (rule, value, callback) => {
@@ -64,7 +65,7 @@
                        _this.$Message.success('表单验证成功!');
                        //提交表单
                        //异步提交数据
-                        _this.$.post('http://localhost:8090/role/addRole',this.addRoleForm).then(function(resp){
+                        _this.$.post(global.serverUrl()+'/role/addRole',this.addRoleForm).then(function(resp){
                             console.log(resp.data);
                             if(resp.code ===600){//服务器成功处理请求
                                 _this.success(resp.msg);
