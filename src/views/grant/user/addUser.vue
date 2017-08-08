@@ -6,7 +6,7 @@
         
         <Form-item label="性别" prop="gender">
             <Radio-group v-model="employeeForm.gender">
-                <Radio label="1">男</Radio>
+                <Radio label="1" checked>男</Radio>
                 <Radio label="2">女</Radio>
             </Radio-group>
         </Form-item>
@@ -152,15 +152,16 @@ export default {
         //组件加载时到服务器获取公司和部门信息
         let _this = this;
         _this.$.get(global.serverUrl()+'/employee/getCompany').then(function(resp){
-            console.log(resp);
+            // console.log(resp);
             _this.tbDicts= resp;
         });
         _this.$.get(global.serverUrl()+'/employee/getDept').then(function(resp){
-            console.log(resp);
+            // console.log(resp);
             _this.tbDicts2= resp;
         }).catch(function(){
              _this.$Message.error('网络错误!');
         });
+       
     },
     methods:{
         handleSubmit(name){
@@ -170,7 +171,7 @@ export default {
                     this.$Message.success('表单验证成功!');
                     //异步提交数据
                     this.$.post(global.serverUrl()+'/employee/addEmployee',this.employeeForm).then(function(resp){
-                        console.log(resp.data);
+                        // console.log(resp.data);
                         if(resp.code ===600){//服务器成功处理请求
                             _this.success(resp.msg);
                             _this.handleReset(name);

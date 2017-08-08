@@ -12,22 +12,22 @@
             <router-link to="/manager/user/addUser" icon="plus">
                 <Button size="small" type='primary'  icon="plus" >添加</Button>
             </router-link>
-            <Button size="small" type="success" @click="batchRemove" icon="close-circled">批量删除</Button>
-            <Input size="small" v-model="employeeName" v-on:input="dynamicSearch(employeeName)" placeholder="请输入姓名搜索!" style="width:200px;"></Input>
-            <Button size="small" type="primary" @click="search" icon="search">搜索</Button>
+            <Button size="small" type="success" icon="close-circled">批量删除</Button>
+            <Input size="small"  placeholder="请输入姓名搜索!" style="width:200px;"></Input>
+            <Button size="small" type="primary" @click="handleSubmit('formInline')" icon="search">搜索</Button>
             <Button size="small" type="warning" icon="loop" @click="refresh">刷新</Button>
             <!--模态框-->
            
         </div>
-        <!--路由视图-->
-        <router-view></router-view>
-        <Table  size='small' :highlight-row='true' :border='true' :columns="employeeColumn" :data="employeeData"   @on-selection-change="selectChange">
+        <!--路由视图
+        <router-view></router-view>-->
+        <Table  size='small' :highlight-row='true' :border='true' :columns="employeeColumn" :data="employeeData">
          
         </Table>
        <div style="margin: 10px;">
             <div style="float: right;">
                 <Page :total="userTotal" @on-change="changePage" @on-page-size-change="changeSize" placement="top" show-sizer  show-elevator
-                 :page-size="15"  :page-size-opts="[5,10,15,30,50,100]"></Page>
+                 :page-size="15"  :page-size-opts="[5,10,15,30,50,100]" ></Page>
             </div>
         </div>
     </div>
@@ -41,8 +41,7 @@ export default {
                 {
                     type: 'selection',
                     width: 60,
-                    key: 'userId',
-                    align: 'center'
+                    align: 'right'
                 },
                 {
                     title: '姓名',
@@ -57,7 +56,8 @@ export default {
                             h('strong', params.row.name)
                         ]);
                     },
-                    width:120
+                    width:90,
+                    align: 'center'
                 },{
                     title:'微信号',
                     key:'wechatNo',
@@ -149,10 +149,10 @@ export default {
                     render:(h,params) =>{
                         let iconColor;
                         let icon;
-                        if(params.row.isEmailActive ==='0'){//非咨询师
+                        if(params.row.isEmailActive ==='0'){//邮箱未激活
                             icon = 'close-circled';
                             iconColor='red';
-                        }else if(params.row.isEmailActive ==='1'){//咨询师
+                        }else if(params.row.isEmailActive ==='1'){//已激活
                              icon='checkmark-circled';
                              iconColor='green';
                         }
@@ -179,6 +179,7 @@ export default {
                     title: '操作',
                     key: 'action',
                     align: 'center',
+                    width:178,
                     render: (h, params) => {
                         return h('div', [
                             h('Button', {
@@ -268,41 +269,27 @@ export default {
             employeeData: [],
             userTotal:0,
             pageSize:15,
-            currentPage:1,
-            employeeName:'',
-            ids:[]
+            currentPage:1
         }
-    },
-    watch:{//监听属性值的变化
-            employeeName:{
-                 handler:(val,oldVal)=>{
-                    
-                }
-            },
-            ids:{
-                 handler:(val,oldVal)=>{
-                    
-                }
-            }
     },
     mounted:function(){
         this.$Message.config({
             top: 85
         }); 
-        this.getAjaxData(0,this.pageSize,this.employeeName);
+        this.getAjaxData(0,this.pageSize);
     },
     methods: {
         //异步获取表格数据
-        getAjaxData(limit,size,employeeName){
+        getAjaxData(limit,size){
             let _this = this;
             _this.$Message.loading({
                     content: '正在拼命加载数据...',
                     top:300,
                     duration: 30
                 });
-            _this.$axios.get(global.serverUrl()+'/employee/getEmployeeList?limit='+limit+"&size="+size+"&employeeName="+employeeName).then(function(resp){
+            _this.$axios.get(global.serverUrl()+'/employee/getEmployeeList?limit='+limit+"&size="+size).then(function(resp){
                 _this.$Message.destroy();
-                _this.employeeData = resp.data.rows;
+                _this.employeeData = resp.data.records;
                 _this.userTotal = resp.data.total;
 
             });
@@ -315,7 +302,7 @@ export default {
                  <h3>微信号:${this.employeeData[index].wechatNo}</h3>
                  <h3>电话号码:${this.employeeData[index].tel}</h3>
                  <h3>邮箱:${this.employeeData[index].email}</h3>
-                 <h3>角色名称:${this.employeeData[index].roleName}</h3>`
+                 <h3>角色名称${this.employeeData[index].roleName}</h3>`
             });
         },
         //删除选中行的数据
@@ -349,39 +336,6 @@ export default {
           
            // _this.employeeData.splice(index, 1);
         },
-        //批量删除选中行的数据
-        batchRemove () {
-            let _this = this;
-            _this.$Modal.confirm({
-                title: '确认操作',
-                content: '<h2>是否删除勾选的所有数据!</h2>',
-                loading: true,
-                onOk: () => {
-                    // console.log(index);
-                    // this.$Modal.remove();
-                        //this.$Message.info('异步关闭了对话框');
-                    let ids = _this.ids;
-                    console.log(ids);
-                    // this.$Message.info('hello');
-                    // 异步删除数据
-                    _this.$axios.get(global.serverUrl()+'/employee/batchRemoveEmployee?ids='+ids).then(function(resp){
-                        if(resp.data.code === 600){//删除成功
-                            _this.$Modal.remove();//移除模态框
-                            _this.success(resp.data.msg);
-                            // _this.employeeData.splice(index, 1);//客户端删除，减少数据库查询
-                            _this.refresh();
-                        }else{//删除失败
-                            _this.error(resp.data.msg);
-                        }
-                    });
-                },
-                onCancel: () => {
-                    _this.$Message.info('取消删除数据!');
-                }
-            });
-          
-           // _this.employeeData.splice(index, 1);
-        },
         editUser(index){//修改用户数据
            let userId = this.employeeData[index].userId;
            //跳转到修改页
@@ -393,23 +347,12 @@ export default {
         },
         //切换页面
         changePage(page){
-               this.getAjaxData(page,this.pageSize,this.employeeName);
+               this.getAjaxData(page,this.pageSize);
                this.currentPage = page;
         },
         changeSize(size){//当改变每页显示条数时，把size保存在this中
             this.pageSize = size;
-        },
-        selectChange(selection ,row ,ids){
-            // this.$Message.info(selection);
-            this.ids = [];
-             ids = this.ids;
-            selection.forEach(function(item,index){  
-            //    console.log(item.userId);
-            //    console.log(index);
-               ids.push(item.userId);
-              
-            });         
-        //    alert(ids);
+            this.refresh();
         },
         success(nodesc) {  //处理成功的消息提醒
             this.$Notice.success({
@@ -424,11 +367,7 @@ export default {
             });
         },
         refresh(){  //点击刷新按钮时，刷新表格数据
-            this.getAjaxData(this.currentPage,this.pageSize,'');
-        },
-        search(){//搜索用户
-        //    console.log(this.employeeName);
-            this.getAjaxData(0,this.pageSize,this.employeeName);
+            this.getAjaxData(this.currentPage,this.pageSize);
         }
     }
 }

@@ -46,7 +46,7 @@
 }
 
 .left-content {
-    height: 600px;
+    height: 950px;
 }
 </style>
 <template>
@@ -62,7 +62,7 @@
                                 信息录入
                             </Menu-item>
                             <Menu-item name="1-2">
-                                <router-link to="/zixun/register/analyis" class="link">数据统计</router-link>
+                                数据统计
                             </Menu-item>
                         </Submenu>
                         
@@ -103,6 +103,10 @@
                     this.$router.push('/zixun/register/analyis'); 
                 }else if(name==='2-1'){
                     this.$router.push('/zixun/customer');
+                }else if(name==='2-2'){
+                    this.$router.push('/zixun/customer/recycler');
+                }else if(name==='2-3'){
+                    this.$router.push('/zixun/customer/inClassCustomer');
                 }
             }
         }

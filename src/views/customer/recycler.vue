@@ -7,12 +7,8 @@
 <template>
 <div id="customer">
             <div class='toolbar'>
-                <!--跳转到添加页面-->
-                <router-link to="/zixun/customer/addCustomer">
-                    <Button size="small" type='primary'  icon="person-add" >添加</Button>
-                </router-link>
-                <Button size="small" type='success' @click="putInClass" icon="android-people" >学员进班</Button>
-                <Button size="small" @click="removeAll" type='error'  icon="trash-a" >回收站</Button>
+                <Button size="small" @click="recoverAll" type="success" icon="arrow-return-left">恢复数据</Button>
+                <Button size="small" @click="deleteAll" type="error" icon="android-delete">删除数据</Button>
                 <Select size='small' v-model="searchCondition" style="width:200px" placeholder='请选择搜索条件!'>
                     <Option v-for="item in conditionVlueas" :value="item.value" :key="item">{{ item.label }}</Option>
                 </Select>
@@ -47,7 +43,6 @@
                     {
                         title:'性别',
                         key:'sex',
-                        width:80,
                         align:'center',
                         render: (h, params) => {
                             let sexIcon;
@@ -74,7 +69,7 @@
                         }
                     },
                     {title:'电话号码',key:'tel'},
-                    {title:'级别',width:80,key:'customerLevelMsg'},
+                    {title:'级别',key:'customerLevelMsg'},
                     {title:'咨询师',key:'userIdMsg'},
                     {title:'关单人',key:'guandaMsg'},
                     {title:'状态',key:'customerStateMsg'},
@@ -108,31 +103,11 @@
                                     }
                                 }
                             }),
-                            h('Button', {
-                                props: {
-                                    type: 'warning',
-                                    icon:'edit',
-                                    size:'small',
-                                    shape:"circle"
-                                },
-                                style:{
-                                    marginRight:'5px'
-                                },
-                                on: {
-                                    click: () => {
-                                        this.edit(params.index);//修改数据
-                                    }
-                                },
-                                nativeOn:{
-                                    mouseenter:()=>{
-                                        this.$Message.info('修改客户信息!');
-                                    }
-                                }
-                            }),h('Button', {//
+                            h('Button', {//恢复数据
                                 props: {
                                     type: 'success',
                                     size:'small',
-                                    icon:'ios-email-outline',
+                                    icon:'arrow-return-left',
                                     shape:"circle"
                                 },
                                 style: {
@@ -140,12 +115,12 @@
                                 },
                                 on: {
                                     click: () => {
-                                        this.follow(params.row.customerId)//授权
+                                        this.recover(params.row.customerId);
                                     }
                                 },
                                 nativeOn:{
                                     mouseenter:()=>{
-                                        this.$Message.info('跟进信息!');
+                                        this.$Message.info('恢复数据!');
                                     }
                                 }
                             }),
@@ -153,17 +128,17 @@
                                 props: {
                                     type: 'error',
                                     size:'small',
-                                    icon:'trash-a',
-                                        shape:"circle"
+                                    icon:'android-delete',
+                                    shape:"circle"
                                 },
                                 on: {
                                     click: () => {
-                                        this.remove(params.row.customerId)
+                                        this.delete(params.index)
                                     }
                                 },
                                 nativeOn:{
                                     mouseenter:()=>{
-                                        this.$Message.info('丢进回收站!');
+                                        this.$Message.info('彻底删除!');
                                     }
                                 }
                             })
@@ -173,7 +148,6 @@
                 ],
                 customerData:[],
                 customerIds:[],
-                studentName:'',
                 userTotal:0,
                 pageSize:15,
                 currentPage:1,
@@ -202,9 +176,8 @@
                         top:300,
                         duration: 30
                     });
-                _this.$axios.get(global.serverUrl()+'/customer/getData?offset='+offset+"&limit="+limit).then(function(resp){
+                _this.$axios.get(global.serverUrl()+'/customer/getHideData?offset='+offset+"&limit="+limit).then(function(resp){
                     _this.$Message.destroy();
-                    //  console.log(resp);
                     _this.customerData = resp.data.rows;
                     _this.userTotal= resp.data.total;
 
@@ -234,7 +207,78 @@
             refresh(){  //点击刷新按钮时，刷新表格数据
                 this.getAjaxData(this.currentPage,this.pageSize);
             },
-            show:function(index){
+            getCustomerIds(selection){//获取到要批量丢进回收站的数据的所有ID
+                let _this = this;
+                _this.customerIds = new Array(selection.length);
+                for (var i = 0; i < selection.length;i++){
+                    _this.customerIds[i] = selection[i].customerId;
+                }
+            },
+            recoverAll:function(){
+                let _this = this;
+                if(_this.customerIds.length === 0){
+                    this.$Message.info("未选中数据！！！");
+                }else{
+                    _this.$Modal.confirm({
+                        title: '确认操作',
+                        content: '<h2>是否恢复所有选中数据!</h2>',
+                        loading: true,
+                        onOk: () => {
+                            // var customerId = _this.customerData[index].customerId;
+                            // console.log(customerId);
+                            _this.$axios.get(global.serverUrl()+'/customer/recoverData?customerId='+_this.customerIds).then(function(resp){
+                                if(resp.data.code === 600){//成功恢复
+                                    _this.$Modal.remove();//移除模态框
+                                    _this.success(resp.data.msg);
+                                _this.getAjaxData(_this.currentPage,_this.pageSize);
+                                }else{//恢复失败
+                                    _this.error(resp.data.msg);
+                                }
+                            });
+                        },
+                        onCancel: () => {
+                            _this.$Message.info('取消恢复数据!');
+                        }
+                    });
+                }
+            },
+            deleteAll:function(){
+                let _this = this;
+                if(_this.customerIds.length === 0){
+                    this.$Message.info("未选中数据！！！");
+                }else{
+                    var customerStr = '';
+                    for(var i=0;i<_this.customerIds.length;i++){
+                        if(i != _this.customerIds.length-1)
+                            customerStr += _this.customerIds[i] + ",";
+                        else
+                            customerStr += _this.customerIds[i];
+                    }
+                    _this.$Modal.confirm({
+                        title: '确认操作',
+                        content: '<h2>是否彻底删除该数据!</h2><br/>'+
+                        '<i style="color:red;fontsize:12px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;彻底删除后的数据无法恢复!</i>',
+                        loading: true,
+                        onOk: () => {
+                            // console.log(customerId);
+                            //异步删除数据
+                            _this.$axios.get(global.serverUrl()+'/customer/deleteData?customerId='+customerStr).then(function(resp){
+                                if(resp.data.code === 600){//删除成功
+                                    _this.$Modal.remove();//移除模态框
+                                    _this.success(resp.data.msg);
+                                _this.getAjaxData(_this.currentPage,_this.pageSize);
+                                }else{//删除失败
+                                    _this.error(resp.data.msg);
+                                }
+                            });
+                        },
+                        onCancel: () => {
+                            _this.$Message.info('取消删除数据!');
+                        }
+                    });
+                }
+            },
+            show:function(index){//查看详细信息
                 var lastTime = new Date(this.customerData[index].lastTime);
                 this.$Modal.info({
                     title: '学员详细信息',
@@ -292,60 +336,42 @@
                     </table>`
                 });
             },
-            follow:function(customerId){
-                this.$router.push({path:'/zixun/customer/showCustomer',query:{customerId:customerId}});
-            },
-            edit:function(index){
-                let customerId = this.customerData[index].customerId;
-                this.$router.push({path:'/zixun/customer/editCustomer',query:{customerId:customerId}});
-            },
-            getCustomerIds(selection){//获取到要批量丢进回收站的数据的所有ID
-                let _this = this;
-                _this.customerIds = new Array(selection.length);
-                _this.studentName = selection[0].realName;
-                for (var i = 0; i < selection.length;i++){
-                    _this.customerIds[i] = selection[i].customerId;
-                }
-            },
-            removeAll (){
-                var _this = this;
-                if(_this.customerIds.length === 0){
-                    this.$Message.info("未选中数据！！！");
-                }else{
-                    _this.$Modal.confirm({
-                        title: '确认操作',
-                        content: '<h2>是否丢进回收站!</h2>',
-                        loading: true,
-                        onOk: () => {
-                            // var customerId = _this.customerData[index].customerId;
-                            //异步删除数据
-                            _this.$axios.get(global.serverUrl()+'/customer/hideData?customerId='+_this.customerIds).then(function(resp){
-                                if(resp.data.code === 600){//删除成功
-                                    _this.$Modal.remove();//移除模态框
-                                    _this.success(resp.data.msg);
-                                _this.getAjaxData(_this.currentPage,_this.pageSize);
-                                }else{//删除失败
-                                    _this.error(resp.data.msg);
-                                }
-                            });
-                        },
-                        onCancel: () => {
-                            _this.$Message.info('取消删除数据!');
-                        }
-                    });
-                }
-            },
-            remove (customerId) {//删除数据
-                // console.log(params);
+            recover:function(customerId){// 恢复选中的回收站中的数据
                 var _this = this;
                 _this.$Modal.confirm({
                     title: '确认操作',
-                    content: '<h2>是否丢进回收站!</h2>',
+                    content: '<h2>是否恢复该数据!</h2>',
                     loading: true,
                     onOk: () => {
                         // var customerId = _this.customerData[index].customerId;
+                        // console.log(customerId);
+                        _this.$axios.get(global.serverUrl()+'/customer/recoverData?customerId='+customerId).then(function(resp){
+                            if(resp.data.code === 600){//成功恢复
+                                _this.$Modal.remove();//移除模态框
+                                _this.success(resp.data.msg);
+                               _this.getAjaxData(_this.currentPage,_this.pageSize);
+                            }else{//恢复失败
+                                _this.error(resp.data.msg);
+                            }
+                        });
+                    },
+                    onCancel: () => {
+                        _this.$Message.info('取消恢复数据!');
+                    }
+                });
+            },
+            delete(index) {//删除数据
+                var _this = this;
+                _this.$Modal.confirm({
+                    title: '确认操作',
+                    content: '<h2>是否彻底删除该数据!</h2><br/>'+
+                    '<i style="color:red;fontsize:12px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;彻底删除后的数据无法恢复!</i>',
+                    loading: true,
+                    onOk: () => {
+                        var customerId = _this.customerData[index].customerId;
+                        // console.log(customerId);
                         //异步删除数据
-                        _this.$axios.get(global.serverUrl()+'/customer/hideData?customerId='+customerId).then(function(resp){
+                        _this.$axios.get(global.serverUrl()+'/customer/deleteData?customerId='+customerId).then(function(resp){
                             if(resp.data.code === 600){//删除成功
                                 _this.$Modal.remove();//移除模态框
                                 _this.success(resp.data.msg);
@@ -359,16 +385,6 @@
                         _this.$Message.info('取消删除数据!');
                     }
                 });
-            },
-            putInClass:function(){
-                let _this = this;
-                if(_this.customerIds.length > 1){
-                    _this.$Message.error("所选数据大于1条!");
-                }else if(_this.customerIds.length === 0){
-                    _this.$Message.info("请选择要进班的学员!");
-                }else{
-                    _this.$router.push({path:'/zixun/customer/putInClass',query:{customerId:_this.customerIds[0],studentName:_this.studentName}});
-                }
             }
         }
     }

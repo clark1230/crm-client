@@ -77,6 +77,30 @@
                     component:(resolve)  => require(['./views/customer/search.vue'],resolve)
                 }
             ]
+        },{
+            path:'/zixun/customer/addCustomer',
+            meta:{title:'添加客户'},
+            component:(resolve)  => require(['./views/customer/addCustomer.vue'],resolve)
+        },{
+            path:'/zixun/customer/editCustomer',
+            meta:{title:'修改客户'},
+            component:(resolve)  => require(['./views/customer/editCustomer.vue'],resolve)
+        },{
+            path:'/zixun/customer/recycler',
+            meta:{title:'回收站'},
+            component:(resolve) => require(['./views/customer/recycler.vue'],resolve)
+        },{
+            path:'/zixun/customer/inClassCustomer',
+            meta:{title:'进班学员'},
+            component:(resolve) => require(['./views/customer/inClassCustomer.vue'],resolve)
+        },{
+            path:'/zixun/customer/showCustomer',
+            meta:{title:'学员跟进'},
+            component:(resolve) => require(['./views/customer/showCustomer.vue'],resolve)
+        },{
+            path:'/zixun/customer/putInClass',
+            meta:{title:'学员进班'},
+            component:(resolve) => require(['./views/customer/putInClass.vue'],resolve)
         }
     ]
 },{

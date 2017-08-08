@@ -168,59 +168,59 @@
         },
         methods:{
             handleSubmit(name){
-            let _this = this;
-            this.$refs[name].validate((valid) => {
-                if (valid) {
-                    this.$Message.success('表单验证成功!');
-                    //提交表单数据
-                    var formData = {
-                        userId:0,
-                        name: '',
-                        gender: '',
-                        tel:'',
-                        email: '',
-                        wechatNo: '',
-                        companyId: '',
-                        deptId: '',
-                        isConsultant: '',
-                    };
-                    formData.userId= _this.employeeForm.userId;
-                    formData.name=_this.employeeForm.name;
-                    formData.gender =_this.employeeForm.gender;
-                    formData.tel= _this.employeeForm.tel;
-                    formData.email = _this.employeeForm.email;
-                    formData.wechatNo = _this.employeeForm.wechatNo;
-                    formData.companyId= _this.employeeForm.companyId;
-                    formData.deptId = _this.employeeForm.deptId;
-                    formData.isConsultant = _this.employeeForm.isConsultant;
-                    _this.$.post(global.serverUrl()+'/employee/editEmployee', formData).then(function(resp){
-                        if(resp.code === 600){
-                            _this.success(resp.msg);
-                            _this.$router.push('/manager/user');
-                        }else{
-                            _this.error(resp.msg);
-                        }
-                    });
-                } else {
-                    this.$Message.error('表单验证失败!');
-                }
-            });
-        },
-        handleReset(name){
-            this.$refs[name].resetFields();
-        },
-        success(nodesc) {  //处理成功的消息提醒
-            this.$Notice.success({
-                title: '处理结果',
-                desc: nodesc
-            });
-        },
-        error(nodesc) {  //处理失败的消息提醒
-            this.$Notice.error({
-                title: '处理结果',
-                desc: nodesc
-            });
-        }
+                let _this = this;
+                this.$refs[name].validate((valid) => {
+                    if (valid) {
+                        this.$Message.success('表单验证成功!');
+                        //提交表单数据
+                        var formData = {
+                            userId:0,
+                            name: '',
+                            gender: '',
+                            tel:'',
+                            email: '',
+                            wechatNo: '',
+                            companyId: '',
+                            deptId: '',
+                            isConsultant: ''
+                        };
+                        formData.userId= _this.employeeForm.userId;
+                        formData.name=_this.employeeForm.name;
+                        formData.gender =_this.employeeForm.gender;
+                        formData.tel= _this.employeeForm.tel;
+                        formData.email = _this.employeeForm.email;
+                        formData.wechatNo = _this.employeeForm.wechatNo;
+                        formData.companyId= _this.employeeForm.companyId;
+                        formData.deptId = _this.employeeForm.deptId;
+                        formData.isConsultant = _this.employeeForm.isConsultant;
+                        _this.$.post(global.serverUrl()+'/employee/editEmployee', formData).then(function(resp){
+                            if(resp.code === 600){
+                                _this.success(resp.msg);
+                                _this.$router.push('/manager/user');
+                            }else{
+                                _this.error(resp.msg);
+                            }
+                        });
+                    } else {
+                        this.$Message.error('表单验证失败!');
+                    }
+                });
+            },
+            handleReset(name){
+                this.$refs[name].resetFields();
+            },
+            success(nodesc) {  //处理成功的消息提醒
+                this.$Notice.success({
+                    title: '处理结果',
+                    desc: nodesc
+                });
+            },
+            error(nodesc) {  //处理失败的消息提醒
+                this.$Notice.error({
+                    title: '处理结果',
+                    desc: nodesc
+                });
+            }
         }
     }
 </script>

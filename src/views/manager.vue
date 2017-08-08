@@ -103,8 +103,6 @@
                     this.$router.push('/manager/permission');//跳转到权限列表
                 }else if(name ==='1-4'){
                     this.$router.push('/login');
-                }else if(name ==='2-1'){
-                    this.$router.push('/login');
                 }
             }
         }
